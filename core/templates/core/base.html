@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Hardware Store{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <h1>Hardware Store</h1>
+    </header>
+
+    <nav>
+        <a href="{% url 'inicio' %}">Inicio</a>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Hardware Store</p>
+    </footer>
+</body>
+</html>
