@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Vendedores{% endblock %}
+
+{% block content %}
+<h2>Vendedores de la tienda</h2>
+
+{% if vendedores %}
+<p>{{ total }} vendedores registrados.</p>
+
+<ul>
+    {% for v in vendedores %}
+    <li>
+        <a href="{% url 'usuarios_detalle' v.id %}">{{ v.nombre }}</a>
+        &mdash; {{ v.rol }}, {{ v.ciudad }}
+        {% if v.activo %}
+            <strong>[activo]</strong>
+        {% else %}
+            <em>[en pausa]</em>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No hay vendedores registrados todavia.</p>
+{% endif %}
+{% endblock %}
