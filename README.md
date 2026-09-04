@@ -117,6 +117,7 @@ Instalación y ejecución
   resolviendo cada conflicto con calma antes de tocar `main`.
 
 Registro de uso de IA
+
 Se hizo uso de de IA para resolver dudas y para la corrección de errores que se presentaron a lo largo del desarrollo del trabajo
 
 
