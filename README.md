@@ -1,11 +1,9 @@
  Tienda de Hardware - Proyecto Django
 
 Integrantes
+Jorge Torres
+Angelo Vidal
 
-| Nombre | 
-|--------|
-| Jorge Torres Méndez | 
-| Angelo Vidal |
 
  Propósito
 
