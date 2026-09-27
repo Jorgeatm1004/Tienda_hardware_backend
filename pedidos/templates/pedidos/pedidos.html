@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+    <h2>{{ titulo }}</h2>
+    <p>Consulta el estado de tu pedido con tu ID de despacho:</p>
+
+    <ul>
+    {% for pedido in pedidos %}
+        <li>
+            <strong>{{ pedido.id_despacho }}</strong> — {{ pedido.cliente }}
+            <br>
+            Fecha de compra: {{ pedido.fecha_compra }}
+            <br>
+            {% if pedido.estado_despacho == 'Entregado' %}
+                <span>✔ Entregado el {{ pedido.fecha_entrega }}</span>
+            {% else %}
+                <span>Estado: {{ pedido.estado_despacho }} — Entrega estimada: {{ pedido.fecha_entrega }}</span>
+            {% endif %}
+            <br>
+            Dirección de entrega: {{ pedido.direccion_entrega }}
+
+            <p>Productos del pedido:</p>
+            <ul>
+            {% for producto in pedido.productos %}
+                <li>{{ producto.nombre }} — Cantidad: {{ producto.cantidad }}</li>
+            {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+    </ul>
+
+    <p><em>Nota: Demostracion de como deberia verse, hasta que se aplique una base de datos.</em></p>
+{% endblock %}

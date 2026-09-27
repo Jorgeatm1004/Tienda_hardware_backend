@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+    <h2>{{titulo }}</h2>
+    
+
+    <ul>
+        {% for producto in productos %}
+            <li> 
+                <strong>{{ producto.nombre }}</strong> - ${{ producto.precio }}
+                {% if producto.stock > 0 %}
+                    <span>(Disponible: {{ producto.stock }} unidades)</span>
+                {% else %}
+                    <span>(Agotado)</span>
+                {% endif %} 
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

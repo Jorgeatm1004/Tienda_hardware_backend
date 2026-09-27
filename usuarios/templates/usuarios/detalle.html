@@ -1,0 +1,25 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{% if vendedor %}{{ vendedor.nombre }}{% else %}Vendedor no encontrado{% endif %}{% endblock %}
+
+{% block content %}
+{% if vendedor %}
+<h2>{{ vendedor.nombre }}</h2>
+<dl>
+    <dt>Rol</dt>
+    <dd>{{ vendedor.rol }}</dd>
+    <dt>Ciudad</dt>
+    <dd>{{ vendedor.ciudad }}</dd>
+    <dt>Publicaciones</dt>
+    <dd>{{ vendedor.publicaciones }}</dd>
+    <dt>Estado</dt>
+    <dd>{% if vendedor.activo %}Cuenta activa{% else %}Cuenta en pausa{% endif %}</dd>
+</dl>
+<p>{{ vendedor.descripcion }}</p>
+<p><a href="{% url 'usuarios_lista' %}">Volver al listado</a></p>
+{% else %}
+<h2>Vendedor no encontrado</h2>
+<p>No existe un vendedor con ese identificador.</p>
+<p><a href="{% url 'usuarios_lista' %}">Volver al listado</a></p>
+{% endif %}
+{% endblock %}
