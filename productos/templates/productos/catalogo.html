@@ -16,6 +16,8 @@
                     {% else %}
                         <span>(Agotado)</span>
                     {% endif %}
+                    <a href="{% url 'producto_editar' producto.id %}">Editar</a>
+                    <a href="{% url 'producto_eliminar' producto.id %}">Eliminar</a>
                 </li>
             {% endfor %}
         </ul>
