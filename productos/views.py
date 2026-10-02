@@ -31,3 +31,15 @@ def editar_producto(request, id):
     }
     return render(request, 'productos/editar.html', contexto)
 
+
+def eliminar_producto(request, id):
+    producto = get_object_or_404(Producto, id=id)
+    # GET muestra la confirmación; solo un POST (con CSRF) borra el registro
+    if request.method == 'POST':
+        producto.delete()
+        return redirect('catalogo')
+    contexto = {
+        'titulo': 'Eliminar producto',
+        'producto': producto,
+    }
+    return render(request, 'productos/eliminar.html', contexto)

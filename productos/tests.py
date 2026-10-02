@@ -68,3 +68,17 @@ class EditarEliminarTests(TestCase):
     def test_editar_inexistente_da_404(self):
         respuesta = self.client.get(reverse('producto_editar', args=[9999]))
         self.assertEqual(respuesta.status_code, 404)
+
+    def test_eliminar_get_pide_confirmacion_sin_borrar(self):
+        respuesta = self.client.get(reverse('producto_eliminar', args=[self.producto.id]))
+        self.assertContains(respuesta, '¿Seguro que quieres eliminar')
+        self.assertTrue(Producto.objects.filter(id=self.producto.id).exists())
+
+    def test_eliminar_post_borra_y_redirige(self):
+        respuesta = self.client.post(reverse('producto_eliminar', args=[self.producto.id]))
+        self.assertRedirects(respuesta, reverse('catalogo'))
+        self.assertFalse(Producto.objects.filter(id=self.producto.id).exists())
+
+    def test_eliminar_inexistente_da_404(self):
+        respuesta = self.client.post(reverse('producto_eliminar', args=[9999]))
+        self.assertEqual(respuesta.status_code, 404)
