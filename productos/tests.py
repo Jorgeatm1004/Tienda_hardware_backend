@@ -32,3 +32,39 @@ class ProductoFormTests(TestCase):
         form = ProductoForm(data={'nombre': '', 'descripcion': 'x', 'precio': 1000, 'stock': 1})
         self.assertFalse(form.is_valid())
         self.assertIn('nombre', form.errors)
+
+
+class EditarEliminarTests(TestCase):
+    def setUp(self):
+        self.producto = Producto.objects.create(
+            nombre='Fuente de poder EVGA 650W', descripcion='80 Plus Bronze', precio=100000, stock=8
+        )
+
+    def test_editar_get_muestra_form_con_datos(self):
+        respuesta = self.client.get(reverse('producto_editar', args=[self.producto.id]))
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertContains(respuesta, 'Fuente de poder EVGA 650W')
+        self.assertContains(respuesta, 'csrfmiddlewaretoken')
+
+    def test_editar_post_guarda_y_redirige(self):
+        respuesta = self.client.post(
+            reverse('producto_editar', args=[self.producto.id]),
+            {'nombre': 'Fuente EVGA 750W', 'descripcion': '80 Plus Gold', 'precio': 120000, 'stock': 4},
+        )
+        self.assertRedirects(respuesta, reverse('catalogo'))
+        self.producto.refresh_from_db()
+        self.assertEqual(self.producto.nombre, 'Fuente EVGA 750W')
+        self.assertEqual(self.producto.stock, 4)
+
+    def test_editar_post_invalido_no_guarda(self):
+        respuesta = self.client.post(
+            reverse('producto_editar', args=[self.producto.id]),
+            {'nombre': '', 'descripcion': 'x', 'precio': 1, 'stock': 1},
+        )
+        self.assertEqual(respuesta.status_code, 200)
+        self.producto.refresh_from_db()
+        self.assertEqual(self.producto.nombre, 'Fuente de poder EVGA 650W')
+
+    def test_editar_inexistente_da_404(self):
+        respuesta = self.client.get(reverse('producto_editar', args=[9999]))
+        self.assertEqual(respuesta.status_code, 404)
