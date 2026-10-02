@@ -1,0 +1,102 @@
+[
+  {
+    "model": "productos.producto",
+    "pk": 1,
+    "fields": {
+      "nombre": "Procesador Ryzen 5 5600X",
+      "descripcion": "Procesador Ryzen 5 5600X - producto de ejemplo del catálogo.",
+      "precio": "150000.00",
+      "stock": 10
+    }
+  },
+  {
+    "model": "productos.producto",
+    "pk": 2,
+    "fields": {
+      "nombre": "Tarjeta de video NVIDIA RTX 3060 12GB",
+      "descripcion": "Tarjeta de video NVIDIA RTX 3060 12GB - producto de ejemplo del catálogo.",
+      "precio": "350000.00",
+      "stock": 5
+    }
+  },
+  {
+    "model": "productos.producto",
+    "pk": 3,
+    "fields": {
+      "nombre": "Memoria RAM Corsair Vengeance 16GB DDR4",
+      "descripcion": "Memoria RAM Corsair Vengeance 16GB DDR4 - producto de ejemplo del catálogo.",
+      "precio": "120000.00",
+      "stock": 20
+    }
+  },
+  {
+    "model": "productos.producto",
+    "pk": 4,
+    "fields": {
+      "nombre": "SSD NVMe 1TB",
+      "descripcion": "SSD NVMe 1TB - producto de ejemplo del catálogo.",
+      "precio": "200000.00",
+      "stock": 15
+    }
+  },
+  {
+    "model": "productos.producto",
+    "pk": 5,
+    "fields": {
+      "nombre": "Motherboard MSI B550 Tomahawk",
+      "descripcion": "Motherboard MSI B550 Tomahawk - producto de ejemplo del catálogo.",
+      "precio": "232000.00",
+      "stock": 5
+    }
+  },
+  {
+    "model": "productos.producto",
+    "pk": 6,
+    "fields": {
+      "nombre": "Fuente de poder EVGA 650W",
+      "descripcion": "Fuente de poder EVGA 650W - producto de ejemplo del catálogo.",
+      "precio": "100000.00",
+      "stock": 8
+    }
+  },
+  {
+    "model": "productos.producto",
+    "pk": 7,
+    "fields": {
+      "nombre": "Gabinete NZXT H510",
+      "descripcion": "Gabinete NZXT H510 - producto de ejemplo del catálogo.",
+      "precio": "90000.00",
+      "stock": 12
+    }
+  },
+  {
+    "model": "productos.producto",
+    "pk": 8,
+    "fields": {
+      "nombre": "Monitor LG UltraGear 27\" 144Hz",
+      "descripcion": "Monitor LG UltraGear 27\" 144Hz - producto de ejemplo del catálogo.",
+      "precio": "250000.00",
+      "stock": 7
+    }
+  },
+  {
+    "model": "productos.producto",
+    "pk": 9,
+    "fields": {
+      "nombre": "Teclado mecánico Razer BlackWidow",
+      "descripcion": "Teclado mecánico Razer BlackWidow - producto de ejemplo del catálogo.",
+      "precio": "80000.00",
+      "stock": 10
+    }
+  },
+  {
+    "model": "productos.producto",
+    "pk": 10,
+    "fields": {
+      "nombre": "Mouse Logitech G502 HERO",
+      "descripcion": "Mouse Logitech G502 HERO - producto de ejemplo del catálogo.",
+      "precio": "60000.00",
+      "stock": 0
+    }
+  }
+]
