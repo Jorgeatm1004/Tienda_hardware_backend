@@ -15,7 +15,7 @@ class ProductoForm(forms.ModelForm):
         widgets = {
             'nombre': forms.TextInput(attrs={'placeholder': 'Ej: Procesador Ryzen 5 5600X'}),
             'descripcion': forms.Textarea(attrs={'rows': 4}),
-            'precio': forms.NumberInput(attrs={'min': 0, 'step': 1}),
+            'precio': forms.NumberInput(attrs={'min': 1, 'step': 1}),
             'stock': forms.NumberInput(attrs={'min': 0}),
         }
 def clean_precio(self): 
