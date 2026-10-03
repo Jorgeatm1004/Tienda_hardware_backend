@@ -13,6 +13,19 @@ def catalogo(request):
     }
     return render(request, 'productos/catalogo.html', contexto)
 
+def crear_producto(request):
+    if request.method == 'POST':
+        form = ProductoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('catalogo')
+    else: 
+        form = ProductoForm()
+    contexto = {
+         'titulo': 'Crear Nuevo Producto',
+           'form': form
+     }
+    return render(request, 'productos/crear.html', contexto)
 
 def editar_producto(request, id):
     # Si el id no existe se responde 404 en vez de un error 500
