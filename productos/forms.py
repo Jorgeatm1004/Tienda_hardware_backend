@@ -18,3 +18,10 @@ class ProductoForm(forms.ModelForm):
             'precio': forms.NumberInput(attrs={'min': 0, 'step': 1}),
             'stock': forms.NumberInput(attrs={'min': 0}),
         }
+def clean_precio(self): 
+    precio = self.cleaned_data.get('precio')
+    if precio is not None and precio <= 0:
+        raise forms.ValidationError('el precio debe ser mayor a cero')
+    return precio
+
+                                
