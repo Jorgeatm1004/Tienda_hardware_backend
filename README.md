@@ -41,11 +41,14 @@ backend/
 
 | URL | Nombre | Vista | Template | 
 |-----|--------|-------|----------|
-| `/` | `inicio` | `core.views.inicio` | `core/inicio.html` |
-| `/productos/` | `catalogo` | `productos.views.catalogo` | `productos/catalogo.html` |
-| `/pedidos/` | `pedidos` | `pedidos.views.pedidos` | `pedidos/pedidos.html` | 
-| `/usuarios/` | `usuarios_lista` | `usuarios.views.lista` | `usuarios/lista.html` | 
-| `/usuarios/<int:id>/` | `usuarios_detalle` | `usuarios.views.detalle` | `usuarios/detalle.html` | 
+| / | inicio` | core.views.inicio | core/inicio.html |
+| /productos/ | catalogo | productos.views.catalogo | productos/catalogo.html |
+| /pedidos/| pedidos | pedidos.views.pedidos | pedidos/pedidos.html | 
+| /usuarios/ | usuarios_lista | usuarios.views.lista | usuarios/lista.html | 
+| /usuarios/<int:id>/ | usuarios_detalle | usuarios.views.detalle | usuarios/detalle.html | 
+|/productos/crear/	|crear_producto|	productos.views.crear_producto|	productos/crear.html|
+|/productos/<int:id>/editar/|	producto_editar	|productos.views.editar_producto|	productos/editar.html|
+|/productos/<int:id>/eliminar/|	producto_eliminar	|productos.views.eliminar_producto|	(Vista de acción / Redirección)|
 
  Contexto y contenido dinámico
 
@@ -67,27 +70,32 @@ Instalación y ejecución
    ```
    git clone https://github.com/Jorgeatm1004/Tienda_hardware_backend.git
    cd Tienda_hardware_backend
-   ```
+   
 2. Crear entorno virtual:
-   ```
+   
    python -m venv .venv
-   ```
+   
 3. Activar entorno virtual:
-   ```
+   
    .\.venv\Scripts\Activate.ps1
-   ```
+   
 4. Instalar dependencias:
-   ```
+   
    pip install -r requirements.txt
-   ```
-5. Ejecutar migraciones:
-   ```
+   
+5. Configurar la variable de entorno:
+
+  Duplicar el archivo .env.ejemplo como .env en la raiz del proyecto y ajustar
+  los valores de la conexion de la base de datos segun el entorno local.
+
+6. Ejecutar migraciones:
+   
    python manage.py migrate
-   ```
+   
 6. Levantar el servidor:
-   ```
+   
    python manage.py runserver
-   ```
+   
 7. Abrir en el navegador: `http://127.0.0.1:8000/`
 
  Trabajo colaborativo con Git y GitHub
@@ -115,6 +123,9 @@ Instalación y ejecución
   agregaba su propia línea en el mismo bloque. Solución: crear una rama de
   integración (`test-integracion`) para fusionar las 4 ramas una por una,
   resolviendo cada conflicto con calma antes de tocar `main`.
+- Error 403 (CSRF token missing) al enviar el formulario de creación: El template HTML inicial no utilizaba la etiqueta de seguridad {% csrf_token %} o no heredaba correctamente del template base con el contexto del request.
+Se soluciono incluyendo el token de seguridad de manera correcta y se ajusta la estructura basada en core/base.html.
+
 
 Registro de uso de IA
 
