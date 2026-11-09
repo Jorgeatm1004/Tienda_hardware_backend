@@ -13,14 +13,17 @@
                     {% if producto.imagen_url %}
                         <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" loading="lazy">
                     {% endif %}
-                    <strong>{{ producto.nombre }}</strong> - ${{ producto.precio }}
+                    <strong>{{ producto.nombre }}</strong>
+                    <span class="precio">${{ producto.precio|floatformat:"0g" }}</span>
                     {% if producto.stock > 0 %}
-                        <span>(Disponible: {{ producto.stock }} unidades)</span>
+                        <span>Disponible: {{ producto.stock }} unidades</span>
                     {% else %}
-                        <span>(Agotado)</span>
+                        <span class="agotado">Agotado</span>
                     {% endif %}
-                    <a href="{% url 'producto_editar' producto.id %}">Editar</a>
-                    <a href="{% url 'producto_eliminar' producto.id %}">Eliminar</a>
+                    <div class="acciones">
+                        <a href="{% url 'producto_editar' producto.id %}">Editar</a>
+                        <a href="{% url 'producto_eliminar' producto.id %}">Eliminar</a>
+                    </div>
                 </li>
             {% endfor %}
         </ul>
