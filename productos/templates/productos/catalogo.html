@@ -10,6 +10,9 @@
         <ul>
             {% for producto in productos %}
                 <li>
+                    {% if producto.imagen_url %}
+                        <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" loading="lazy">
+                    {% endif %}
                     <strong>{{ producto.nombre }}</strong> - ${{ producto.precio }}
                     {% if producto.stock > 0 %}
                         <span>(Disponible: {{ producto.stock }} unidades)</span>
