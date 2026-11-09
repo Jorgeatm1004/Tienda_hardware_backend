@@ -3,25 +3,21 @@
 {% block title %}Vendedores{% endblock %}
 
 {% block content %}
-<h2>Vendedores de la tienda</h2>
+<div class="encabezado"><h2>Vendedores de la tienda</h2>{% if vendedores %}<span>{{ total }} vendedores registrados</span>{% endif %}</div>
 
 {% if vendedores %}
-<p>{{ total }} vendedores registrados.</p>
-
-<ul>
+<ul class="vendedores">
     {% for v in vendedores %}
-    <li>
-        <a href="{% url 'usuarios_detalle' v.id %}">{{ v.nombre }}</a>
-        &mdash; {{ v.rol }}, {{ v.ciudad }}
-        {% if v.activo %}
-            <strong>[activo]</strong>
-        {% else %}
-            <em>[en pausa]</em>
-        {% endif %}
+    <li{% if not v.activo %} class="pausa"{% endif %}>
+        <a href="{% url 'usuarios_detalle' v.id %}">
+            <span class="avatar" aria-hidden="true">{{ v.nombre|slice:":1" }}</span>
+            <span class="quien"><strong>{{ v.nombre }}</strong><span>{{ v.rol }} · {{ v.ciudad }}</span></span>
+            <span class="stock {% if v.activo %}ok{% else %}no{% endif %}">{% if v.activo %}Activo{% else %}En pausa{% endif %}</span>
+        </a>
     </li>
     {% endfor %}
 </ul>
 {% else %}
-<p>No hay vendedores registrados todavia.</p>
+<p>No hay vendedores registrados todavía.</p>
 {% endif %}
 {% endblock %}

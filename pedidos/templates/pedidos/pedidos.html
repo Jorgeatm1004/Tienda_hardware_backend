@@ -3,33 +3,36 @@
 {% block title %}{{ titulo }}{% endblock %}
 
 {% block content %}
-    <h2>{{ titulo }}</h2>
+    <div class="encabezado"><h2>{{ titulo }}</h2><span>{{ pedidos|length }} pedidos</span></div>
     <p>Consulta el estado de tu pedido con tu ID de despacho:</p>
 
-    <ul>
+    <ul class="pedidos">
     {% for pedido in pedidos %}
         <li>
-            <strong>{{ pedido.id_despacho }}</strong> — {{ pedido.cliente }}
-            <br>
-            Fecha de compra: {{ pedido.fecha_compra }}
-            <br>
-            {% if pedido.estado_despacho == 'Entregado' %}
-                <span>✔ Entregado el {{ pedido.fecha_entrega }}</span>
-            {% else %}
-                <span>Estado: {{ pedido.estado_despacho }} — Entrega estimada: {{ pedido.fecha_entrega }}</span>
-            {% endif %}
-            <br>
-            Dirección de entrega: {{ pedido.direccion_entrega }}
+            <div class="fila">
+                <span class="codigo">{{ pedido.id_despacho }}</span>
+                <span class="stock {% if pedido.estado_despacho == 'Entregado' %}ok{% else %}poco{% endif %}">{{ pedido.estado_despacho }}</span>
+            </div>
+            <strong class="cliente">{{ pedido.cliente }}</strong>
 
-            <p>Productos del pedido:</p>
-            <ul>
+            <ol class="ruta">
+                <li class="hecho"><b>Compra</b><span>{{ pedido.fecha_compra }}</span></li>
+                <li class="hecho{% if pedido.estado_despacho != 'Entregado' %} actual{% endif %}"><b>En tránsito</b></li>
+                <li{% if pedido.estado_despacho == 'Entregado' %} class="hecho actual"{% endif %}><b>Entregado</b><span>{% if pedido.estado_despacho != 'Entregado' %}Estimada {% endif %}{{ pedido.fecha_entrega }}</span></li>
+            </ol>
+
+            <dl class="datos">
+                <dt>Dirección de entrega</dt><dd>{{ pedido.direccion_entrega }}</dd>
+            </dl>
+
+            <ul class="items">
             {% for producto in pedido.productos %}
-                <li>{{ producto.nombre }} — Cantidad: {{ producto.cantidad }}</li>
+                <li><span>{{ producto.nombre }}</span><b>×{{ producto.cantidad }}</b></li>
             {% endfor %}
             </ul>
         </li>
     {% endfor %}
     </ul>
 
-    <p><em>Nota: Demostracion de como deberia verse, hasta que se aplique una base de datos.</em></p>
+    <p class="nota">Nota: demostración de cómo debería verse, hasta que se aplique una base de datos.</p>
 {% endblock %}

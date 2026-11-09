@@ -2,27 +2,203 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Hardware Store{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Hardware Store{% endblock %} · Hardware Store</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+    <style>
+        /* A · Ficha técnica en oscuro: barra azul noche, fichas con foto sobre blanco, datos en mono */
+        :root { --fondo: #0c121b; --panel: #131b26; --borde: #243041; --texto: #e6ecf3; --suave: #8d9db0;
+                --barra: #080d14; --acento: #3d7ef0; --acento-txt: #7fb0ff; --foto: #f3f5f8;
+                --ok: #4cc27f; --poco: #f0a43c; --peligro: #f06b6b;
+                --sans: "IBM Plex Sans", system-ui, "Segoe UI", sans-serif;
+                --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
+                --lado: max(20px, calc((100vw - 1140px) / 2)); color-scheme: dark; }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: var(--sans); background: var(--fondo); color: var(--texto);
+               line-height: 1.5; min-height: 100vh; display: flex; flex-direction: column; }
+        header { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; padding: 14px var(--lado);
+                 background: var(--barra); border-bottom: 1px solid var(--borde); }
+        .marca { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none;
+                 font-weight: 700; font-size: 1.15rem; letter-spacing: -.01em; }
+        .marca svg { width: 28px; height: 28px; color: var(--acento-txt); }
+        nav { display: flex; gap: 4px; flex-wrap: wrap; margin-left: auto; }
+        nav a { color: var(--suave); text-decoration: none; padding: 8px 12px; border-radius: 4px; font-size: .92rem;
+                transition: color .15s ease, background-color .15s ease; }
+        nav a:hover { color: #fff; background: rgba(255, 255, 255, .06); }
+        nav a[aria-current="page"] { color: #fff; font-weight: 600; background: rgba(255, 255, 255, .08); }
+        main { flex: 1; width: 100%; max-width: 1140px; margin: 0 auto; padding: 32px 20px 48px; }
+        main h2 { margin: 0 0 8px; font-size: 1.7rem; letter-spacing: -.02em; text-wrap: balance; }
+        main h3 { margin: 0; font-size: 1.25rem; letter-spacing: -.01em; }
+        main a { color: var(--acento-txt); transition: color .15s ease; }
+        main > p { color: var(--suave); }
+        :focus-visible { outline: 2px solid var(--acento-txt); outline-offset: 2px; }
+
+        /* listas generales (pedidos, vendedores): cada elemento es una ficha */
+        main > ul { list-style: none; padding: 0; display: grid; gap: 14px;
+                    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+        main > ul:has(li ul) { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+        main > ul > li { background: var(--panel); border: 1px solid var(--borde); border-radius: 4px; padding: 16px;
+                         animation: aparece .4s cubic-bezier(.2, .7, .2, 1) both;
+                         transition: border-color .18s ease, transform .18s ease; }
+        main > ul > li:hover { border-color: #3a4a60; transform: translateY(-2px); }
+        main li ul { margin: 6px 0 0; padding-left: 18px; color: var(--suave); }
+        main li strong { font-weight: 600; }
+        main li span { color: var(--suave); }
+
+        /* fichas de producto (catálogo y destacados) */
+        main > ul.fichas { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+        .fichas > li { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+        .fichas > li:hover { border-color: var(--acento); box-shadow: 0 12px 28px rgba(0, 0, 0, .4); }
+        .foto { aspect-ratio: 1; background: var(--foto); display: grid; place-items: center; overflow: hidden; }
+        .foto img { width: 84%; height: 84%; object-fit: contain; mix-blend-mode: multiply; transition: transform .3s ease; }
+        .fichas > li:hover .foto img { transform: scale(1.04); }
+        .cuerpo { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+        .cuerpo strong { font-size: .98rem; line-height: 1.3; text-wrap: balance; }
+        .pie { margin-top: auto; padding-top: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+        .precio { font-family: var(--mono); font-weight: 600; font-size: 1.15rem; color: var(--texto) !important;
+                  font-variant-numeric: tabular-nums; }
+        .stock { font-size: .76rem !important; font-weight: 600; padding: 3px 8px; border-radius: 3px;
+                 display: inline-flex; align-items: center; gap: 6px; }
+        .stock::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+        .stock.ok { color: var(--ok) !important; background: color-mix(in srgb, var(--ok) 13%, transparent); }
+        .stock.poco { color: var(--poco) !important; background: color-mix(in srgb, var(--poco) 14%, transparent); }
+        .stock.no { color: var(--peligro) !important; background: color-mix(in srgb, var(--peligro) 13%, transparent); }
+        .agotado .foto img { filter: grayscale(1); opacity: .55; }
+        .acciones { display: flex; gap: 16px; font-size: .86rem; padding-top: 10px; margin-top: 4px; border-top: 1px solid var(--borde); }
+        .acciones a { text-decoration: none; font-weight: 600; }
+        .acciones a:hover { text-decoration: underline; }
+        .acciones a.borrar { color: var(--peligro); }
+
+        /* portada del inicio */
+        .portada { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 32px; align-items: center;
+                   background: var(--panel); border: 1px solid var(--borde); border-radius: 4px; padding: 32px; margin-bottom: 16px;
+                   animation: aparece .4s cubic-bezier(.2, .7, .2, 1) both; }
+        .portada h2 { font-size: clamp(1.8rem, 3.2vw, 2.5rem); font-weight: 700; line-height: 1.1; margin-bottom: 12px; }
+        .portada p { color: var(--suave); max-width: 46ch; margin: 0 0 22px; }
+        .portada .foto { aspect-ratio: 4 / 3; border-radius: 4px; }
+        .botones { display: flex; gap: 10px; flex-wrap: wrap; }
+        .boton { display: inline-flex; align-items: center; gap: 8px; background: var(--acento); color: #fff !important;
+                 text-decoration: none; padding: 11px 20px; border-radius: 4px; font-weight: 600;
+                 transition: filter .15s ease, transform .1s ease; }
+        .boton:hover { filter: brightness(1.12); }
+        .boton:active { transform: scale(.98); }
+        .boton.sec { background: transparent; color: var(--texto) !important; box-shadow: inset 0 0 0 1px var(--borde); }
+        .boton.sec:hover { box-shadow: inset 0 0 0 1px var(--suave); }
+        .cifras { display: flex; gap: 32px; margin: 26px 0 0; flex-wrap: wrap; max-width: none; padding: 0; background: none; border: 0; }
+        .cifras div { display: flex; flex-direction: column-reverse; }
+        .cifras dd { margin: 0; font-family: var(--mono); font-size: 1.35rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+        .cifras dt { font-size: .74rem; color: var(--suave); text-transform: uppercase; letter-spacing: .07em; }
+        .accesos { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 40px; }
+        .accesos a { display: flex; flex-direction: column; gap: 2px; padding: 16px 18px; border-radius: 4px; text-decoration: none;
+                     background: var(--panel); border: 1px solid var(--borde); color: var(--texto);
+                     animation: aparece .4s cubic-bezier(.2, .7, .2, 1) both; transition: border-color .18s ease; }
+        .accesos a:hover { border-color: var(--acento); }
+        .accesos strong { font-weight: 600; }
+        .accesos span { color: var(--suave); font-size: .88rem; }
+        .encabezado { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+        .encabezado a, .encabezado span { font-size: .9rem; font-weight: 600; text-decoration: none; }
+        .encabezado span { color: var(--suave); font-weight: 400; }
+
+        /* detalle y formularios */
+        dl { display: grid; grid-template-columns: max-content 1fr; gap: 10px 24px; max-width: 520px;
+             background: var(--panel); border: 1px solid var(--borde); border-radius: 4px; padding: 18px 22px; }
+        dt { color: var(--suave); }
+        dd { margin: 0; }
+        form { max-width: 560px; background: var(--panel); border: 1px solid var(--borde); border-radius: 4px; padding: 22px; }
+        form p { display: flex; flex-direction: column; gap: 6px; margin: 0 0 16px; }
+        form label { font-size: .88rem; font-weight: 500; color: var(--suave); }
+        form button + a { margin-left: 16px; }
+        input, textarea, select { background: var(--fondo); color: var(--texto); font: inherit;
+                                  border: 1px solid var(--borde); border-radius: 4px; padding: 9px 10px;
+                                  transition: border-color .15s ease, box-shadow .15s ease; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--acento);
+                                                    box-shadow: 0 0 0 3px color-mix(in srgb, var(--acento) 25%, transparent); }
+        button, input[type="submit"] { background: var(--acento); color: #fff; border: 0; font: inherit; font-weight: 600;
+                                       border-radius: 4px; padding: 10px 18px; cursor: pointer;
+                                       transition: filter .15s ease, transform .1s ease; }
+        button:hover { filter: brightness(1.12); }
+        button:active { transform: scale(.97); }
+
+        /* pedidos: recorrido del despacho */
+        .pedidos > li { display: flex; flex-direction: column; gap: 12px; padding: 18px; }
+        .fila { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+        .codigo { font-family: var(--mono); font-weight: 600; color: var(--acento-txt) !important; letter-spacing: .04em; }
+        .cliente { font-size: 1.05rem; }
+        .ruta { list-style: none; margin: 4px 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .ruta li { position: relative; padding-top: 18px; display: flex; flex-direction: column; font-size: .8rem; }
+        .ruta li::before { content: ""; position: absolute; top: 4px; left: 0; right: 0; height: 2px; background: var(--borde); }
+        .ruta li::after { content: ""; position: absolute; top: 0; left: 0; width: 10px; height: 10px; border-radius: 50%;
+                          background: var(--panel); box-shadow: inset 0 0 0 2px var(--borde); }
+        .ruta li.hecho::before { background: var(--acento); }
+        .ruta li.hecho::after { background: var(--acento); box-shadow: none; }
+        .ruta li.actual::before { background: linear-gradient(90deg, var(--acento) 0 10px, var(--borde) 10px); }
+        .ruta li.actual::after { box-shadow: 0 0 0 4px color-mix(in srgb, var(--acento) 30%, transparent); }
+        .ruta b { font-weight: 600; }
+        .ruta span { font-family: var(--mono); font-size: .76rem; }
+        dl.datos { max-width: none; background: none; border: 0; padding: 0; margin: 0; font-size: .9rem; }
+        ul.items { list-style: none; margin: 0; padding: 12px 0 0; border-top: 1px solid var(--borde); color: var(--texto);
+                   display: flex; flex-direction: column; gap: 6px; font-size: .9rem; }
+        .items li { display: flex; justify-content: space-between; gap: 12px; }
+        .items b { font-family: var(--mono); font-weight: 500; color: var(--suave); }
+        .nota { font-size: .85rem; font-style: italic; }
+
+        /* vendedores */
+        main > ul.vendedores { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+        .vendedores > li { padding: 0; }
+        .vendedores a { display: flex; align-items: center; gap: 14px; padding: 16px; color: var(--texto); text-decoration: none; }
+        .vendedores > li:hover { border-color: var(--acento); }
+        .quien { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+        .quien span { font-size: .86rem; }
+        .avatar { flex: none; width: 42px; height: 42px; border-radius: 4px; display: grid; place-items: center;
+                  font-family: var(--mono); font-weight: 600; font-size: 1.1rem; color: var(--acento-txt) !important;
+                  background: color-mix(in srgb, var(--acento) 16%, transparent);
+                  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acento) 40%, transparent); }
+        .avatar.grande { width: 64px; height: 64px; font-size: 1.6rem; }
+        .pausa .avatar { filter: grayscale(1); opacity: .6; }
+        .migas { margin: 0 0 16px; font-size: .9rem; }
+        .migas a { text-decoration: none; }
+        .perfil { max-width: 620px; background: var(--panel); border: 1px solid var(--borde); border-radius: 4px; padding: 24px;
+                  display: flex; flex-direction: column; gap: 16px; animation: aparece .4s cubic-bezier(.2, .7, .2, 1) both; }
+        .perfil-cab { display: flex; align-items: center; gap: 16px; }
+        .perfil-cab h2 { margin: 0 0 6px; }
+        .perfil p { margin: 0; color: var(--suave); }
+        dl.tres { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding-top: 16px; border-top: 1px solid var(--borde); }
+        dl.tres div { display: flex; flex-direction: column-reverse; gap: 2px; }
+        dl.tres dt { font-size: .74rem; text-transform: uppercase; letter-spacing: .07em; }
+        dl.tres dd { font-weight: 600; }
+        dd.num { font-family: var(--mono); font-size: 1.2rem; }
+
+        footer { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 22px var(--lado);
+                 background: var(--barra); border-top: 1px solid var(--borde); color: var(--suave); font-size: .85rem; }
+        @keyframes aparece { from { opacity: 0; transform: translateY(10px); } }
+        .fichas > li:nth-child(2) { animation-delay: .04s; } .fichas > li:nth-child(3) { animation-delay: .08s; }
+        .fichas > li:nth-child(4) { animation-delay: .12s; } .fichas > li:nth-child(n+5) { animation-delay: .16s; }
+        @media (max-width: 760px) { .portada { grid-template-columns: 1fr; padding: 22px; } nav { margin-left: 0; } }
+        @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+    </style>
 </head>
 <body>
     <header>
-        <h1>Hardware Store</h1>
+        <a class="marca" href="{% url 'inicio' %}">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="6" y="6" width="20" height="20" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><rect x="11" y="11" width="10" height="10" rx="1.5" fill="currentColor"/><path d="M10 2v4M16 2v4M22 2v4M10 26v4M16 26v4M22 26v4M2 10h4M2 16h4M2 22h4M26 10h4M26 16h4M26 22h4" stroke="currentColor" stroke-width="2"/></svg>
+            Hardware Store
+        </a>
+        <nav>
+            <a href="{% url 'inicio' %}" {% if request.path == '/' %}aria-current="page"{% endif %}>Inicio</a>
+            <a href="{% url 'catalogo' %}" {% if '/productos/' in request.path %}aria-current="page"{% endif %}>Catálogo</a>
+            <a href="{% url 'pedidos' %}" {% if '/pedidos/' in request.path %}aria-current="page"{% endif %}>Pedidos</a>
+            <a href="{% url 'usuarios_lista' %}" {% if '/usuarios/' in request.path %}aria-current="page"{% endif %}>Vendedores</a>
+        </nav>
     </header>
-
-    <nav>
-        <a href="{% url 'inicio' %}">Inicio</a>
-        <a href="{% url 'catalogo' %}">Catálogo</a>
-        <a href="{% url 'pedidos' %}">Pedidos</a>
-        <a href="{% url 'usuarios_lista' %}">Vendedores</a>
-
-    </nav>
 
     <main>
         {% block content %}{% endblock %}
     </main>
 
     <footer>
-        <p>&copy; 2026 Hardware Store</p>
+        <span>&copy; 2026 Hardware Store</span>
+        <span>Proyecto Django · Programación Backend</span>
     </footer>
 </body>
 </html>

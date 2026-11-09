@@ -3,21 +3,26 @@
 {% block title %}{{ titulo }}{% endblock %}
 
 {% block content %}
-    <h2>{{ titulo }}</h2>
-    <p>Total de productos: {{ cantidad_productos }}</p>
+    <div class="encabezado"><h2>{{ titulo }}</h2><span>Total de productos: {{ cantidad_productos }}</span></div>
 
     {% if productos %}
-        <ul>
+        <ul class="fichas">
             {% for producto in productos %}
-                <li>
-                    <strong>{{ producto.nombre }}</strong> - ${{ producto.precio }}
-                    {% if producto.stock > 0 %}
-                        <span>(Disponible: {{ producto.stock }} unidades)</span>
-                    {% else %}
-                        <span>(Agotado)</span>
+                <li{% if producto.stock == 0 %} class="agotado"{% endif %}>
+                    {% if producto.imagen_url %}
+                        <div class="foto"><img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" loading="lazy"></div>
                     {% endif %}
-                    <a href="{% url 'producto_editar' producto.id %}">Editar</a>
-                    <a href="{% url 'producto_eliminar' producto.id %}">Eliminar</a>
+                    <div class="cuerpo">
+                        <strong>{{ producto.nombre }}</strong>
+                        <div class="pie">
+                            <span class="precio">${{ producto.precio|floatformat:"0g" }}</span>
+                            {% include 'productos/stock.html' %}
+                        </div>
+                        <div class="acciones">
+                            <a href="{% url 'producto_editar' producto.id %}">Editar</a>
+                            <a class="borrar" href="{% url 'producto_eliminar' producto.id %}">Eliminar</a>
+                        </div>
+                    </div>
                 </li>
             {% endfor %}
         </ul>
