@@ -3,6 +3,29 @@
 {% block title %}Inicio{% endblock %}
 
 {% block content %}
-    <h2>Bienvenido a {{ nombre_tienda }}</h2>
-    <p>{{ descripcion }}</p>
+    <section class="portada">
+        <h2>Bienvenido a {{ nombre_tienda }}</h2>
+        <p>{{ descripcion }}</p>
+        <a class="boton" href="{% url 'catalogo' %}">Ver los {{ total_productos }} productos</a>
+    </section>
+
+    <div class="accesos">
+        <a href="{% url 'catalogo' %}"><strong>Catálogo</strong><span>Productos, precios y stock</span></a>
+        <a href="{% url 'pedidos' %}"><strong>Pedidos</strong><span>Sigue tu despacho</span></a>
+        <a href="{% url 'usuarios_lista' %}"><strong>Vendedores</strong><span>Quién vende en la tienda</span></a>
+    </div>
+
+    {% if destacados %}
+        <h3>Destacados</h3>
+        <ul>
+            {% for producto in destacados %}
+                <li>
+                    <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" loading="lazy">
+                    <strong>{{ producto.nombre }}</strong>
+                    <span class="precio">${{ producto.precio|floatformat:"0g" }}</span>
+                    <div class="acciones"><a href="{% url 'catalogo' %}">Ver en el catálogo</a></div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock %}
