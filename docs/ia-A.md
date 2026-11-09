@@ -67,6 +67,28 @@ Herramienta: Claude Code (modelo Claude Opus 5.5), usado en la terminal sobre el
   código del PR no se ejecutó en local; los códigos 201 y 403 de la tabla se comprueban en las pruebas.
 - **Aprendizaje y riesgos:** Revisar un PR no es solo leer el código: hay que contrastarlo con el modelo y con lo que pide la pauta. Riesgo: aprobar sin ejecutar el código deja errores sin detectar; por eso los códigos de respuesta se comprueban en las pruebas.
 
+## Iteración 6: pruebas 3 a 7 y 403 en Postman
+
+- **Problema inicial:** había que hacer las pruebas del CRUD con token y dejar evidencia en Admin y PostgreSQL.
+- **Prompt:** «que paso quedamos en el 5» (para retomar la prueba 5 tras cambiar de sesión).
+- **Respuesta recibida:** instrucciones paso a paso para cada petición en Postman y para las capturas.
+- **Decisión:** aceptado. Angelo hizo cada petición y cada captura.
+- **Verificación:** la IA consultó PostgreSQL en cada paso: el PATCH dejó precio 12990.00 y stock 5,
+  el DELETE dejó 0 filas y el 403 no creó ningún producto (siguieron 10).
+- **Aprendizaje y riesgos:** Un 404 en el PATCH no era un error de la API: el producto 12 ya no existía y la base mostró que el de prueba era el 13. Riesgo: una captura puede mostrar una contraseña (pasó con la de `usuario_normal`), así que se revisa cada una antes de subirla y se cambia la clave.
+
+## Iteración 7: estilos e imágenes del sitio
+
+- **Problema inicial:** el catálogo HTML se veía sin estilos.
+- **Prompt:** «podemos agregarle un css mas bonito, por que esta feo» y luego «agregale imagenes de internet
+  para ver visualmente que estoy viendo , la iamgen que sea hd».
+- **Respuesta recibida:** CSS en `base.html` y un campo opcional `imagen_url` en `Producto`, con migración,
+  fixture, formulario y catálogo. Angelo eligió el campo en el modelo y fotos del modelo exacto.
+- **Decisión:** aceptado. No lo pide la guía; es un extra.
+- **Verificación:** vista previa del catálogo, `manage.py check` sin errores y la API sin cambios, porque el
+  serializer no incluye `imagen_url`.
+- **Aprendizaje y riesgos:** Agregar un campo al modelo obliga a crear una migración y a actualizar el fixture para que otro integrante vea lo mismo al clonar. Riesgo: las imágenes se cargan desde otros sitios y pueden dejar de funcionar; una de LG no cargaba y hubo que cambiarla.
+
 ## Errores de la IA detectados
 
 - Aconsejó guardar la petición en Postman y después lo corrigió, porque esa petición podía
@@ -76,3 +98,6 @@ Herramienta: Claude Code (modelo Claude Opus 5.5), usado en la terminal sobre el
 - Primero recomendó esperar a B para abrir el PR y luego recomendó abrirlo antes.
 - Indicó ejecutar el comando de revisión en el chat con el prefijo `!`, pero se pegó en la terminal,
   fuera de la carpeta del proyecto, y falló. Se corrigió agregando `-R` con el repositorio.
+- Al retomar en una sesión nueva dio un estado desactualizado (dijo que faltaban las pruebas ya
+  empezadas) hasta revisar la sesión anterior.
+- Usó una imagen de LG que no cargaba en el navegador; se reemplazó por otra.
