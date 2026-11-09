@@ -4,9 +4,22 @@
 
 {% block content %}
     <section class="portada">
-        <h2>Bienvenido a {{ nombre_tienda }}</h2>
-        <p>{{ descripcion }}</p>
-        <a class="boton" href="{% url 'catalogo' %}">Ver los {{ total_productos }} productos</a>
+        <div>
+            <h2>Bienvenido a {{ nombre_tienda }}</h2>
+            <p>{{ descripcion }}</p>
+            <div class="botones">
+                <a class="boton" href="{% url 'catalogo' %}">Ver los {{ total_productos }} productos →</a>
+                <a class="boton sec" href="{% url 'pedidos' %}">Seguir un pedido</a>
+            </div>
+            <dl class="cifras">
+                <div><dt>Productos</dt><dd>{{ total_productos }}</dd></div>
+                <div><dt>Unidades en stock</dt><dd>{{ unidades|default:0 }}</dd></div>
+                {% if precio_minimo %}<div><dt>Desde</dt><dd>${{ precio_minimo|floatformat:"0g" }}</dd></div>{% endif %}
+            </dl>
+        </div>
+        {% if destacados %}
+            <div class="foto"><img src="{{ destacados.0.imagen_url }}" alt="{{ destacados.0.nombre }}"></div>
+        {% endif %}
     </section>
 
     <div class="accesos">
@@ -16,14 +29,18 @@
     </div>
 
     {% if destacados %}
-        <h3>Destacados</h3>
-        <ul>
+        <div class="encabezado"><h3>Destacados</h3><a href="{% url 'catalogo' %}">Ver catálogo →</a></div>
+        <ul class="fichas">
             {% for producto in destacados %}
                 <li>
-                    <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" loading="lazy">
-                    <strong>{{ producto.nombre }}</strong>
-                    <span class="precio">${{ producto.precio|floatformat:"0g" }}</span>
-                    <div class="acciones"><a href="{% url 'catalogo' %}">Ver en el catálogo</a></div>
+                    <div class="foto"><img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" loading="lazy"></div>
+                    <div class="cuerpo">
+                        <strong>{{ producto.nombre }}</strong>
+                        <div class="pie">
+                            <span class="precio">${{ producto.precio|floatformat:"0g" }}</span>
+                            {% include 'productos/stock.html' %}
+                        </div>
+                    </div>
                 </li>
             {% endfor %}
         </ul>

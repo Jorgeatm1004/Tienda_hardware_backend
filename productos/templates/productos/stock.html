@@ -1,0 +1,1 @@
+{% if producto.stock == 0 %}<span class="stock no">Agotado</span>{% elif producto.stock <= 5 %}<span class="stock poco">Quedan {{ producto.stock }}</span>{% else %}<span class="stock ok">{{ producto.stock }} en stock</span>{% endif %}
