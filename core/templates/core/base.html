@@ -21,6 +21,8 @@
         nav a { color: var(--texto); text-decoration: none; padding: 6px 14px; border-radius: 6px;
                 transition: background-color .15s ease; }
         nav a:hover { background: var(--borde); }
+        nav a[aria-current="page"] { background: var(--borde); color: #fff; font-weight: 600;
+                                     box-shadow: inset 0 -2px 0 var(--acento); }
         main { max-width: 1100px; margin: 0 auto; padding: 24px 32px; }
         main h2 { margin-top: 0; }
         main a { color: var(--acento); transition: color .15s ease; }
@@ -72,10 +74,10 @@
     </header>
 
     <nav>
-        <a href="{% url 'inicio' %}">Inicio</a>
-        <a href="{% url 'catalogo' %}">Catálogo</a>
-        <a href="{% url 'pedidos' %}">Pedidos</a>
-        <a href="{% url 'usuarios_lista' %}">Vendedores</a>
+        <a href="{% url 'inicio' %}" {% if request.path == '/' %}aria-current="page"{% endif %}>Inicio</a>
+        <a href="{% url 'catalogo' %}" {% if '/productos/' in request.path %}aria-current="page"{% endif %}>Catálogo</a>
+        <a href="{% url 'pedidos' %}" {% if '/pedidos/' in request.path %}aria-current="page"{% endif %}>Pedidos</a>
+        <a href="{% url 'usuarios_lista' %}" {% if '/usuarios/' in request.path %}aria-current="page"{% endif %}>Vendedores</a>
 
     </nav>
 
